@@ -15,10 +15,15 @@ class App extends React.Component {
     this.setState({isLogin: true});
   }
 
+  logoutHandler = () => {
+    localStorage.removeItem(TOKEN_KEY);
+    this.setState({isLogin: false});
+  }
+
   render() {
     return (
       <div className="App">
-        <Header/>
+        <Header isLoggedIn={this.state.isLogin} logoutHandler={this.logoutHandler}/>
         <Main isLoggedIn={this.state.isLogin} loginHandler={this.loginHandler}/>
       </div>
     );
