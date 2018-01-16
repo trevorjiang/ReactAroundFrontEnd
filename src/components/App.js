@@ -4,11 +4,19 @@ import {Main} from './Main.js'
 import '../styles/App.css';
 
 class App extends React.Component {
+  state = {
+    isLogin: false,
+  }
+
+  loginHandler = () => {
+    this.setState({isLogin: true});
+  }
+
   render() {
     return (
       <div className="App">
         <Header/>
-        <Main/>
+        <Main isLoggedIn={this.state.isLogin} loginHandler={this.loginHandler}/>
       </div>
     );
   }
