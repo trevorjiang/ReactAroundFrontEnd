@@ -88,7 +88,7 @@ export class Home extends React.Component {
       this.setState({posts: response, loadingPosts: false, error: ''});
     }, (error) => {
       console.log(error);
-      this.setState({loadingPosts: false, error: error.responseText});
+      this.setState({posts: [], loadingPosts: false, error: error.responseText});
     }).catch((error) => {
       console.log(error);
     })
