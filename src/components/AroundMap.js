@@ -13,7 +13,7 @@ class AroundMap extends React.Component {
     const {lat, lon} = JSON.parse(localStorage.getItem(POS_KEY));
     return (
       <GoogleMap
-        defaultZoom={8}
+        defaultZoom={10}
         defaultCenter={{ lat: lat, lng: lon }}
       >
         {
