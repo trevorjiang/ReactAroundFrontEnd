@@ -1,9 +1,10 @@
 import React from 'react';
 import $ from 'jquery';
-import { Tabs, Button, Spin} from 'antd';
+import { Tabs, Spin} from 'antd';
 import {API_ROOT, GEO_OPTIONS, POS_KEY, AUTH_PREFIX, TOKEN_KEY} from '../constants';
 import {Gallery} from './Gallery';
 import {CreatePostButton} from "./CreatePostButton";
+import {WrappedAroundMap} from './AroundMap';
 
 const TabPane = Tabs.TabPane;
 
@@ -73,12 +74,12 @@ export class Home extends React.Component {
   }
 
   loadNearbyPosts = () => {
-    //const {lat, lon} = JSON.parse(localStorage.getItem(POS_KEY));
-    const lat = 37.7915953;
-    const lon = -122.3937977;
+    const {lat, lon} = JSON.parse(localStorage.getItem(POS_KEY));
+    //const lat = 37.7915953;
+    //const lon = -122.3937977;
 
     this.setState({loadingPosts: true, error: ''});
-    $.ajax({
+    return ($.ajax({
       url: `${API_ROOT}/search?lat=${lat}&lon=${lon}&range=20`,
       method: 'GET',
       headers: {
@@ -92,16 +93,23 @@ export class Home extends React.Component {
       this.setState({posts: [], loadingPosts: false, error: error.responseText});
     }).catch((error) => {
       console.log(error);
-    })
+    }))
   }
 
   render() {
+    const createPostButton = <CreatePostButton loadNearbyPosts={this.loadNearbyPosts}/>;
     return (
-        <Tabs tabBarExtraContent={<CreatePostButton/>} className="main-tabs">
+        <Tabs tabBarExtraContent={createPostButton} className="main-tabs">
           <TabPane tab="Posts" key="1">
             {this.getGalleryPanelContent()}
           </TabPane>
-          <TabPane tab="Map" key="2">Content of tab 2</TabPane>
+          <TabPane tab="Map" key="2">
+            <WrappedAroundMap
+              googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places"
+              loadingElement={<div style={{ height: `100%` }} />}
+              containerElement={<div style={{ height: `400px` }} />}
+              mapElement={<div style={{ height: `100%` }} />}/>
+          </TabPane>
         </Tabs>
     );
   }
