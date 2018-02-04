@@ -36,7 +36,7 @@ export class Home extends React.Component {
   }
 
   onSuccessLoadGeoLocation = (position) => {
-    console.log(position);
+    //console.log(position);
     this.setState({loadingGeoLocation: false, error: ''});
     const {latitude, longitude} = position.coords;
     localStorage.setItem(POS_KEY, JSON.stringify({lat: latitude, lon: longitude}));
@@ -73,20 +73,21 @@ export class Home extends React.Component {
     return null;
   }
 
-  loadNearbyPosts = () => {
-    const {lat, lon} = JSON.parse(localStorage.getItem(POS_KEY));
+  loadNearbyPosts = (location, radius) => {
+    const {lat, lon} = location? location: JSON.parse(localStorage.getItem(POS_KEY));
+    const range = radius ? radius: 20;
     //const lat = 37.7915953;
     //const lon = -122.3937977;
 
     this.setState({loadingPosts: true, error: ''});
     return ($.ajax({
-      url: `${API_ROOT}/search?lat=${lat}&lon=${lon}&range=20`,
+      url: `${API_ROOT}/search?lat=${lat}&lon=${lon}&range=${range}`,
       method: 'GET',
       headers: {
         Authorization: `${AUTH_PREFIX} ${localStorage.getItem(TOKEN_KEY)}`,
       }
     }).then((response) => {
-      console.log(response);
+      //console.log(response);
       this.setState({posts: response, loadingPosts: false, error: ''});
     }, (error) => {
       console.log(error);
@@ -110,6 +111,7 @@ export class Home extends React.Component {
               containerElement={<div style={{ height: `500px` }} />}
               mapElement={<div style={{ height: `100%` }} />}
               posts={this.state.posts}
+              loadNearbyPosts={this.loadNearbyPosts}
             />
           </TabPane>
         </Tabs>
